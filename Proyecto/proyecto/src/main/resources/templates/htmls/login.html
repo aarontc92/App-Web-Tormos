@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Tormos | Login</title>
+  <html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <link rel="stylesheet" href="/css/login.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <link rel="shortcut icon" href="img/home.ico" />
+</head>
+
+<body>
+  <header>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a href="/"> <img class="navbar-brand" src="img/home.png" alt="Home" width="100" height="100"></a>
+          <ul class="nav navbar-nav">
+            <li> <a href="/">Home</a></li>
+            <li class="active"><a href="/login">Login</a></li>
+          </ul>
+        </div>
+    </nav>
+  </header>
+  <main>
+    <div class="login">
+      <div class="login-header">
+        <h1>Login</h1>
+      </div>
+      <div class="login-form">
+        <form th:action="@{/login}" method="post">
+          <h3>Username:</h3>
+          <input type="text" placeholder="Username" name="username" /><br>
+          <h3>Password:</h3>
+          <input type="password" placeholder="Password" name="password" />
+          <br>
+          <button type="submit" class="login-button">Login</button>
+          <br>
+          <a class="sign-up">Sign Up!</a>
+          <br>
+          <h6 class="no-access">Can't access your account?</h6>
+        </form>
+      </div>
+    </div>
+  </main>
+  <footer class="text-light bg-dark blockquote-footer fixed-bottom" style="margin-bottom: -20px;">
+    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
+      <p>Creado por Aarón 2020 </p>
+    </div>
+  </footer>
+</body>
+
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <title>Tormos</title>
+  <html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <link rel="stylesheet" href="/css/login.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <link rel="shortcut icon" href="img/home.ico" />
+  <title>Tormos</title>
+  <meta charset="utf-8" />
+</head>
+
+<body>
+  <header>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a href="/"> <img class="navbar-brand" src="img/home.png" alt="Home" width="100" height="100"></a>
+        </div>
+        <ul class="nav navbar-nav main">
+          <li class="active"> <a class="active" href="/">Home</a></li>
+          <li th:style="'visibility:'+${visibleLogin}+';'"><a href="/login">Login</a></li>
+          <li th:style="'visibility:'+${visibleInicio}+';'"><a th:href="'name='+${name}" th:text="${name}"></a></li>
+          <li th:style="'visibility:'+${visibleInicio}+';'"><a href="/addImagen"><svg xmlns="http://www.w3.org/2000/svg"
+                width="16" height="16" fill="currentColor" class="bi bi-file-earmark-image" viewBox="0 0 16 16">
+                <path d="M6.502 7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z" />
+                <path
+                  d="M14 14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5V14zM4 1a1 1 0 0 0-1 1v10l2.224-2.224a.5.5 0 0 1 .61-.075L8 11l2.157-3.02a.5.5 0 0 1 .76-.063L13 10V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4z" />
+              </svg> Add</a></li>
+          <li th:style="'visibility:'+${visibleInicio}+';'"><a href="/perfil"><svg xmlns="http://www.w3.org/2000/svg"
+                width="16" height="16" fill="currentColor" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
+                <path
+                  d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z" />
+              </svg> Perfil</a></li>
+          <li class="right" th:style="'visibility:'+${visibleInicio}+';'">
+            <form th:action="@{/}" method="post">
+              <button type="submit" class="btn btn-primary float-right">Logout</button>
+            </form>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <div class="container" th:each="img : ${imagenes}">
+      <div class="card text-center">
+        <a href="/img.idFoto"><img class="card-img-top img-rounded bg-dark"
+            th:src="@{'data:image/jpeg;base64,'+${img.imagen}}" /></a>
+        <div class="card-body">
+          <h5 class="card-title float-left" th:text="${img.usuario}+':'"></h5>
+          <p class="card-text " th:text="${img.descripcion}"></p>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer class="text-light bg-dark blockquote-footer fixed-bottomfixed-bottom">
+    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
+      <p>Creado por Aarón 2020 </p>
+    </div>
+
+  </footer>
+
+</body>
+
+</html>
