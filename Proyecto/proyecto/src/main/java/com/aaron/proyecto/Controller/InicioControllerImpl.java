@@ -3,11 +3,9 @@ package com.aaron.proyecto.Controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import com.aaron.proyecto.Service.CabeceraService;
 import com.aaron.proyecto.Service.ImagenesService;
 import com.aaron.proyecto.Service.TemplateEngineConfig;
 import com.aaron.proyecto.Service.UserService;
-import com.aaron.proyecto.models.Cabecera;
 import com.aaron.proyecto.models.Users;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,36 +21,42 @@ public class InicioControllerImpl implements InicioController {
     @Autowired
     UserService userService;
     @Autowired
-    CabeceraService cabeceraService;
-    @Autowired
     ImagenesService imagenesService;
     @Autowired
     TemplateEngineConfig templateEngineConfig;
 
-    Cabecera cabecera;
     Users user;
     HttpSession sesion;
 
     ModelAndView modelAndView = new ModelAndView();
 
-    @RequestMapping(value = "/name={username}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/usuario={username}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Override
     public ModelAndView getUserLoged(HttpServletRequest request) {
         sesion = request.getSession();
         user = (Users) sesion.getAttribute("usuario");
         String imagen = "";
-        try {
+        StringBuffer url = request.getRequestURL();
+        String[] path = url.toString().split("/");
+        String[] idString=path[3].split("=");
+        String  name=idString[1];
 
-            imagen = cabeceraService.loadCabeceraByUsername(user.getNomUser());
-            modelAndView.clear();
-            modelAndView.addObject("imagenes", imagenesService.loadDatos(user.getNomUser()));
+        Integer id = userService.loadUserByName(name).getIdUsuario();
+        imagen = userService.loadCabeceraByUsername(id);
+        if (user != null) {
+            modelAndView.addObject("hiddenUser", "visible");
+            modelAndView.addObject("hiddenUserLogin", "hidden");
+            modelAndView.addObject("name", user.getNomUser());
+            modelAndView.addObject("imagenes", imagenesService.loadDatos(id));
             modelAndView.addObject("imagen", imagen);
-        } catch (Exception e) {
+        } else {
             modelAndView.clear();
-            modelAndView.addObject("imagenes", "");
-            modelAndView.addObject("imagen", "");
+            modelAndView.addObject("hiddenUser", "hidden");
+            modelAndView.addObject("hiddenUserLogin", "visible");
+            modelAndView.addObject("name", "");
+            modelAndView.addObject("imagenes", imagenesService.loadDatos(id));
+            modelAndView.addObject("imagen", imagen);
         }
-        modelAndView.addObject("name", user.getNomUser());
         modelAndView.setViewName("htmls/inicio");
 
         return modelAndView;

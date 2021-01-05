@@ -8,5 +8,5 @@ import org.springframework.web.servlet.ModelAndView;
 
 public interface AddImageController {
     public ModelAndView getFormImage(HttpServletRequest request);
-    public ModelAndView processForm(MultipartFile[] file,HttpServletRequest request, String descripcion, Model model);
+    public ModelAndView processForm(MultipartFile[] file,HttpServletRequest request, String descripcion,String titulo, Model model);
 }

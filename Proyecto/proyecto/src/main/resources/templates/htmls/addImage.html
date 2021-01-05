@@ -22,7 +22,7 @@
         <ul class="nav navbar-nav main">
           <li> <a class="active" href="/">Home</a></li>
           <li style="visibility:hidden;"><a href="/login">Login</a></li>
-          <li><a th:href="'name='+${name}" th:text="${name}"></a></li>
+          <li><a th:href="'/usuario='+${name}" th:text="${name}"></a></li>
           <li class="active"><a href="/addImagen"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                 fill="currentColor" class="bi bi-file-earmark-image" viewBox="0 0 16 16">
                 <path d="M6.502 7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z" />
@@ -49,7 +49,12 @@
         <h1>ADD NEW IMAGE</h1>
       </div>
       <div class="login-form">
-        <form th:action="@{/add}" method="post" enctype="multipart/form-data">
+        <form th:action="@{/addImagen}" method="post" enctype="multipart/form-data">
+          <div class="alert alert-danger" th:style="'visibility:'+${visibleError}"role="alert" th:text="${error}"></div>
+          <div class="alert alert-success" th:style="'visibility:'+${visibleSucces}"role="alert" th:text="${succes}"></div>
+          <h3>Titulo:</h3>
+          <br>
+          <input type="text" placeholder="Titulo" name="titulo" /><br>
           <h3>Descripcion:</h3>
           <br>
           <input type="text" placeholder="Descripcion" name="descripcion" /><br>

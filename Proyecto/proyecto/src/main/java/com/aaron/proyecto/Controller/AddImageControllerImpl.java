@@ -1,10 +1,8 @@
 package com.aaron.proyecto.Controller;
 
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import com.aaron.proyecto.Service.CabeceraService;
 import com.aaron.proyecto.Service.ImagenesService;
 import com.aaron.proyecto.Service.TemplateEngineConfig;
 import com.aaron.proyecto.Service.UserService;
@@ -26,8 +24,6 @@ public class AddImageControllerImpl implements AddImageController {
     @Autowired
     UserService userService;
     @Autowired
-    CabeceraService cabeceraService;
-    @Autowired
     ImagenesService imagenesService;
     @Autowired
     TemplateEngineConfig templateEngineConfig;
@@ -43,22 +39,51 @@ public class AddImageControllerImpl implements AddImageController {
     public ModelAndView getFormImage(HttpServletRequest request) {
         sesion = request.getSession();
         user = (Users) sesion.getAttribute("usuario");
-        modelAndView.addObject("name", user.getNomUser());
+        if(user!=null){
+             modelAndView.addObject("name", user.getNomUser());
+        modelAndView.addObject("visibleError", "hidden;");
+        modelAndView.addObject("visibleSucces", "hidden;");
         modelAndView.setViewName("htmls/addImage");
-
+        }else{
+            return new ModelAndView("redirect:/login");
+        }
         return modelAndView;
 
     }
 
-    @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/addImagen", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @Override
-    public ModelAndView processForm(MultipartFile[] file,HttpServletRequest request, String descripcion, Model model) {
+    public ModelAndView processForm(MultipartFile[] file, HttpServletRequest request, String descripcion, String titulo,
+            Model model) {
         sesion = request.getSession();
-       
         user = (Users) sesion.getAttribute("usuario");
-        imagenesService.addImagen(user.getNomUser(), file, descripcion);
-        modelAndView.setViewName("htmls/inicio");
+        boolean comprueba = this.comprobacionImagen(file);
+        if (comprueba) {
+            try {
+                imagenesService.addImagen(user.getIdUsuario(), file, descripcion, titulo);
+                modelAndView.addObject("succes", "Imagen subida con exito.");
+                modelAndView.addObject("visibleSucces", "visible;");
+            } catch (Exception e) {
+                modelAndView.addObject("error", "Formato de archivo incorrecto o demasiado pesado.");
+                modelAndView.addObject("visibleError", "visible;");
+            }
+        } else {
+            modelAndView.addObject("error", "Debes selecionar una imagen valida.");
+            modelAndView.addObject("visibleError", "visible;");
+        }
+
+        modelAndView.setViewName("htmls/addImage");
 
         return modelAndView;
+    }
+
+    private boolean comprobacionImagen(MultipartFile[] file) {
+        for (MultipartFile multipartFile : file) {
+            if (multipartFile.isEmpty()) {
+            
+                return  false;
+            }
+        }
+        return true;
     }
 }

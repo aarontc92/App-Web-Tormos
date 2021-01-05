@@ -8,13 +8,17 @@ import com.aaron.proyecto.Service.UserService;
 import com.aaron.proyecto.models.Users;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.MediaType;
+import org.springframework.lang.NonNull;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
-@Controller
+@RestController
 public class LoginImpl implements LoginController {
 
     @Autowired
@@ -27,82 +31,74 @@ public class LoginImpl implements LoginController {
     HttpSession sesion;
     ModelAndView modelAndView = new ModelAndView();
 
-    @GetMapping("/login")
-    public String sendForm(String username, String password) {
-        return "htmls/login";
+    @RequestMapping(value = "/login", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Override
+    public ModelAndView sendForm(Model model) {
+
+        model.addAttribute("visible", "hidden;");
+
+        modelAndView.setViewName("htmls/login");
+        return modelAndView;
     }
 
-    @PostMapping("/login")
-    public String processForm(HttpServletRequest request, String username, String password, Model model) {
-        try {
-            user = userService.loadUserByUsername(username);
-            if (password.equals(user.getPass())) {
-                sesion = request.getSession(true);
-                sesion.setAttribute("usuario", user);
-                model.addAttribute("name", username);
+    @RequestMapping(value = "/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Override
+    public ModelAndView processForm(HttpServletRequest request,
+            @NonNull @RequestParam(value = "email", required = true) String email,
+            @RequestParam(value = "password", required = true) String password, Model model) {
+
+        
+        Boolean correcto = true;
+        Boolean correo = true;
+        Boolean contraseña = true;
+
+        modelAndView.setViewName("htmls/login");
+        
+        if (password.equals("")) {
+            model.addAttribute("error", "La contraseña no debe estar vacia.");
+
+            correcto = false;
+        } else if (email.equals("")) {
+            model.addAttribute("error", "El email no debe estar vacio.");
+            correcto = false;
+        } else {
+            correo = userService.comprobarEmail(email);
+            if (correo) {
+                contraseña = userService.comprobarPass(password, email);
             }
-        } catch (Exception e) {
-            System.out.println("Error" + e);
-            model.addAttribute("name", "invitado");
         }
-        return "redirect:/name=" + username;
-    }
+        if (!correo) {
+            model.addAttribute("error", "Email no registrado.");
+        }
+        if (!contraseña) {
+            model.addAttribute("error", "Contraseña incorrecta.");
+        }
+        modelAndView.setViewName("htmls/login");
+        if (correcto && correo && contraseña) {
+            sesion = request.getSession(true);
+            user = userService.loadUserByEmail(email);
+            sesion.setAttribute("usuario", user);
+            model.addAttribute("name", user.getNomUser());
+            modelAndView.setViewName("htmls/inicio");
 
-    @PostMapping("/")
-    @Override
-    public String logout(HttpServletRequest request, Model model) {
-        sesion = request.getSession();
-        sesion.invalidate();
-        return "redirect:/login";
-    }
+            return new ModelAndView("redirect:/usuario=" + user.getNomUser());
 
-    @GetMapping("/perfil")
-    public ModelAndView perfil(HttpServletRequest request, Model model) {
-        
-        sesion = request.getSession();
-        user = (Users) sesion.getAttribute("usuario");
-        modelAndView.clear();
-        modelAndView.addObject("user", user);
-        modelAndView.setViewName("htmls/perfilUser");
+        }
         return modelAndView;
     }
 
-    @PostMapping("/perfil")
+    @RequestMapping(value = "/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @Override
-    public ModelAndView perfilForm(HttpServletRequest request, Model model, String pass, String passConfirmed,
-            String nom, String correo) {
-        Users modificado = new Users();
+    public RedirectView logout(HttpServletRequest request, Model model) {
+        RedirectView redir=new RedirectView();
         sesion = request.getSession();
-        user = (Users) sesion.getAttribute("usuario");
-        if (pass.equals(passConfirmed)) {
-            modificado.setCorreo(correo);
-            modificado.setIdUsuario(user.getIdUsuario());
-            modificado.setNomUser(nom);
-            modificado.setPass(pass);
-            modificado.toString();
-            userService.updateUser(modificado);
-            modelAndView.clear();
-            modelAndView.addObject("user", modificado);
-            modelAndView.setViewName("htmls/perfilUser");
-        }
-
-        return modelAndView;
-    }
-
-    @PostMapping("/home")
-    @Override
-    public String deletePerfil(HttpServletRequest request, Model model) {
-
-        sesion = request.getSession();
-        user = (Users) sesion.getAttribute("usuario");
-
-        userService.deleteUsers(user.getIdUsuario());
         sesion.invalidate();
-       
-        modelAndView.clear();
-        
-        return "redirect:/login";
+        redir = new RedirectView();
+        redir.setUrl("/login");
+        modelAndView.setViewName("login");
+        return redir;
     }
 
     
+
 }

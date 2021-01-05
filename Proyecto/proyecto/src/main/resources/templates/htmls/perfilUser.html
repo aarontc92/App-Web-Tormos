@@ -22,7 +22,7 @@
         <ul class="nav navbar-nav main">
           <li> <a class="active" href="/">Home</a></li>
           <li style="visibility:hidden;"><a href="/login">Login</a></li>
-          <li><a th:href="'name='+${user.nomUser}" th:text="${user.nomUser}"></a></li>
+          <li><a th:href="'/usuario='+${user.nomUser}" th:text="${user.nomUser}"></a></li>
           <li><a href="/addImagen"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                 class="bi bi-file-earmark-image" viewBox="0 0 16 16">
                 <path d="M6.502 7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z" />
@@ -49,27 +49,41 @@
         <h1 th:text="${user.nomUser}"></h1>
       </div>
       <div class="login-form">
+        <form th:action="@{/perfilImagen}" method="post" enctype="multipart/form-data">
+          <div class="alert alert-danger" th:style="'visibility:'+${visible}" role="alert" th:text="${error}"></div>
+
+          <img th:src="@{'data:image/jpeg;base64,'+${imagen}}" class="media-object img-circle text-center"
+            style="width:100px" />
+
+          <h3>Fichero:</h3>
+          <br>
+          <input type="file" class="form-control-file align-items-center" name="cabecera">
+          <button type="submit"  class="btn btn-primary"  onclick="window.location.href='/perfil'">Modificar Imagen</button>
+        </form>
+        <form th:action="@{/deleteCab}" method="post" class="deltedUser">
+          <a href="/perfil"><button type="submit"  class="btn btn-danger">Eliminar Imagen</button></a>
+        </form>
+        <hr />
         <form th:action="@{/perfil}" method="post">
-          <h3>Username:</h3>
-          <input type="text" th:value="${user.nomUser}" name="nom" /><br>
-          <h3>Password:</h3>
-          <input type="password" th:value="${user.pass}" name="pass" />
-          <br>
-          <h3>Password:</h3>
-          <input type="password" th:value="${user.pass}" name="passConfirmed" />
-          <br>
-          <h3>Correo:</h3>
-          <input type="email" th:value="${user.correo}" name="correo" />
-          <br>
-          <br>
-          <button type="submit" th:style="'visibility:'+${visibleModificacion}+';'"
-            class="btn btn-primary">Modificar</button>
+        <h3>Username:</h3>
+        <input type="text" th:value="${user.nomUser}" name="nom" /><br>
+        <h3>Password:</h3>
+        <input type="password" th:value="${user.pass}" name="pass" />
+        <br>
+        <h3>Repite la contraseña:</h3>
+        <input type="password" th:value="${user.pass}" name="passConfirmed" />
+        <br>
+        <h3>Correo:</h3>
+        <input type="email" th:value="${user.correo}" name="correo" />
+        <br>
+        <br>
+        <a href="/perfil"><button type="submit" class="btn btn-primary">Modificar</button></a>
       </div>
       <br>
       </form>
 
       <form th:action="@{/home}" method="post" class="deltedUser">
-        <button type="submit" class="btn btn-danger">Eliminar Cuenta</button>
+        <a href="/">  <button type="submit"  class="btn btn-danger">Eliminar Cuenta</button></a>
       </form>
 
     </div>

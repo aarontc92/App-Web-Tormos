@@ -23,7 +23,7 @@
         <ul class="nav navbar-nav main">
           <li class="active"> <a class="active" href="/">Home</a></li>
           <li th:style="'visibility:'+${visibleLogin}+';'"><a href="/login">Login</a></li>
-          <li th:style="'visibility:'+${visibleInicio}+';'"><a th:href="'name='+${name}" th:text="${name}"></a></li>
+          <li th:style="'visibility:'+${visibleInicio}+';'"><a th:href="'/usuario='+${name}" th:text="${name}"></a></li>
           <li th:style="'visibility:'+${visibleInicio}+';'"><a href="/addImagen"><svg xmlns="http://www.w3.org/2000/svg"
                 width="16" height="16" fill="currentColor" class="bi bi-file-earmark-image" viewBox="0 0 16 16">
                 <path d="M6.502 7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z" />
@@ -46,14 +46,16 @@
   </header>
   <main>
     <div class="container" th:each="img : ${imagenes}">
+      <a th:href="'/id='+${img.idFoto}">
       <div class="card text-center">
-        <a href="/img.idFoto"><img class="card-img-top img-rounded bg-dark"
-            th:src="@{'data:image/jpeg;base64,'+${img.imagen}}" /></a>
+        <img class="card-img-top img-rounded bg-dark"
+            th:src="@{'data:image/jpeg;base64,'+${img.imagen}}" />
         <div class="card-body">
-          <h5 class="card-title float-left" th:text="${img.usuario}+':'"></h5>
+          <h3 class="card-title text-center" th:text="${img.titulo}"></h3>
           <p class="card-text " th:text="${img.descripcion}"></p>
         </div>
       </div>
+    </a>
     </div>
   </main>
   <footer class="text-light bg-dark blockquote-footer fixed-bottomfixed-bottom">

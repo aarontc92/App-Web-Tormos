@@ -9,8 +9,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 public interface ImagenesService {
-    public List<String> loadImagesByUsername(String username);
+    public List<String> loadImagesByUsername(Integer username);
+    public Imagenes loadImagenByIdFoto(Long idFoto);
     public List<Imagenes> loadAllImages();
-    public List<Imagenes> loadDatos(String username);
-	public void addImagen(String nomUser, MultipartFile[] file, String descripcion);
+    public List<Imagenes> loadDatos(Integer id_username);
+    public void addImagen(Integer nomUser, MultipartFile[] file, String descripcion,String titulo);
+    public void deleteImage(Long idFoto);
+    public void updateImage(Long idFoto,Integer idUser, String descripcion, String titulo);
 }

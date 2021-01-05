@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>Tormos | Login</title>
+  <title>Tormos | Sign-Up!</title>
   <html lang="es" xmlns:th="http://www.thymeleaf.org">
   <link rel="stylesheet" href="/css/login.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -27,21 +27,28 @@
   <main>
     <div class="login">
       <div class="login-header">
-        <h1>Login</h1>
+        <h1>Sign Up!</h1>
       </div>
       <div class="login-form">
-        <form th:action="@{/login}" method="post">
+        <form th:action="@{/sign-up}" method="post">
           <div class="alert alert-danger" th:style="'visibility:'+${visible}"role="alert" th:text="${error}"></div>
-          <h3>Email:</h3>
-          <input type="email" placeholder="Correo" name="email" /><br>
+          <h3 class="text-center">Email:</h3>
+          <input type="email" placeholder="Correo" name="email" />
+          <br>
+          <h3>Nombre:</h3>
+          <input type="text" placeholder="Nombre" name="nombre" />
+          <br>
           <h3>Password:</h3>
           <input type="password" placeholder="Password" name="password" />
           <br>
-          <button type="submit" class="login-button">Login</button>
+          <h3>Repite la contraseña:</h3>
+          <input type="password" placeholder="Password" name="passwordConfirm" />
           <br>
-          <a class="sign-up" href="/sign-up">Sign Up!</a>
+          <button type="submit" class="login-button">Registrate</button>
           <br>
-
+          <a class="sign-up" href="/login">Ya tienes cuenta</a>
+          <br>
+          
         </form>
       </div>
     </div>
